@@ -119,12 +119,7 @@ class Board:
         size = 0
         for i in range(25):
             size+=len(self.get_cell_domain(i))
-        return size
-            
-
-
-    
-    
+        return size         
 
     
     # using minimum remaining value method to find next cell to assign a letter. Among all empty letters 
