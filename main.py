@@ -13,6 +13,7 @@ letters = list(string.ascii_uppercase)
 letters.remove('Z')
 common_elements = lambda a, b: list(filter(lambda x: x in a, b))
 
+# generates the letter domains, which letter should have which letter in nighborhood.
 letter_possible_domain= {'A': ['B']}
 for i in range(len(letters)):
     if letters[i] not in ['A', 'Y']:
@@ -28,12 +29,6 @@ board[16] = "E"
 board[24] = "K"
 
 
-
-# board[0] = 'A'
-# board[4] = 'E'
-# board[20] = 'U'
-# board[24] = 'Y'
-# inds = [0, 4, 20, 24]
 
 class Board:
     def __init__(self, board, parent = None, path = ()):
@@ -57,7 +52,7 @@ class Board:
     def get_used_letters(self):
         return [i for i in self.board if i != '_']
 
-    # inputs the value into board
+    # inputs the value into a board
     def input_letter(self, index, letter):
         new_board = self.board.copy()
         new_board[index] = letter
@@ -71,14 +66,15 @@ class Board:
         return True
     
     
-    # check if the board has cells with empty domain which means no letter can be assigned to it. 
+    # check if the board has cells with empty domain. Empty domain means no letter can be assigned to it. 
+    # Domain in this code means all the possible letters that can be assigned to a cell. 
     def is_consistant(self):
         for i in self.empty_cells:
             if len(self.get_cell_domain(i)) == 0:
                 return False
         return True
 
-    # gets the domain of the cell. 2 Ifs, first one for the cell all neighbors of which are known, and 
+    # Gets the domain of the cell. 2 Ifs, first one for the cell all neighbors of which are known, and 
     # the second if for all others
     def get_cell_domain(self, i, pr = False):
         right, left, top, bottom = self.get_cell_neighbors(i)
@@ -122,7 +118,7 @@ class Board:
         return size         
 
     
-    # using minimum remaining value method to find next cell to assign a letter. Among all empty letters 
+    # using minimum remaining value method to find the next cell to assign a letter. Among all empty letters 
     # finds the one with minimum domain size. (domain size is the pool of all leters that can be assigned to a letter)
     def mrv(self):
         best_cells = []
@@ -144,8 +140,8 @@ class Board:
                 break
         return moves
     
-    # using mrv method to get the letter to assign a letter. After getting a cell it picks the least restricting letter
-    # to asssign.It counts sum of domain sizes of all empty cells after assigning a letter and chooses the maximum one. 
+    # Using mrv method to get a cell to assign a letter. After getting a cell it picks the least restricting letter
+    # to asssign.It counts sum of domain sizes of all empty cells after assigning this letter and chooses the maximum one. 
     def lcv(self, all_paths, pr = False):
         possible_moves = self.mrv()
         smart_moves = []
@@ -169,6 +165,7 @@ class Board:
         top = i-5 if i not in range(0,4) else neg_inf
         bottom = i+5 if i not in range(20,25) else neg_inf
         return [right, left, top, bottom]
+    
     # show_board
     def sb(self):
         for i in range(len(self.board)):
@@ -176,7 +173,7 @@ class Board:
             if (i+1) % 5 == 0 and i != 0:
                 print("\n")
                 
-    # for each used letter, it gets the neighbor letters and checks if all adjacent letters in that neighborhood
+    # for each used letter, it gets the neighboring in alphabet letters and checks if all adjacent in board letters are in that neighborhood
     def arc(self):
         for i in self.filled_cells:
             c = 0
@@ -193,7 +190,7 @@ class Board:
                 return False
         return True
             
-    # decided is the board is target
+    # decides is the board target
     def is_target(self):
         for i in range(25):        
             is_neighbor = 0
